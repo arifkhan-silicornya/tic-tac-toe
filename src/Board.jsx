@@ -6,9 +6,10 @@ export default function Board() {
   const [isXNext, setIsXNext] = useState(true);
 
   const winner = calculateWinner(squares);
+  const isDraw = !winner && squares.every((square) => square !== null); // Check for draw
 
   const handleClick = (i) => {
-    if (squares[i] || winner) return;
+    if (squares[i] || winner || isDraw) return; // Prevent changes if there's a winner or draw
 
     const nextSquares = squares.slice();
     nextSquares[i] = isXNext ? "X" : "O";
@@ -31,9 +32,9 @@ export default function Board() {
       </div>
       <div className="mt-4">
         {winner ? (
-          <h2 className="text-4xl text-green-500 font-semibold">
-            {winner} wins!
-          </h2>
+          <h2 className="text-xl font-semibold">{winner} wins!</h2>
+        ) : isDraw ? (
+          <h2 className="text-xl font-semibold">It's a draw!</h2>
         ) : (
           <h2 className="text-xl font-semibold">
             Next Player: {isXNext ? "X" : "O"}
