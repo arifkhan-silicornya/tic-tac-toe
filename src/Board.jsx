@@ -5,7 +5,7 @@ export default function Board() {
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [isXNext, setIsXNext] = useState(true);
 
-  const winner = calculateWinner(squares);
+  const { winner, winningLine } = calculateWinner(squares); // Now returning both winner and winning line
   const isDraw = !winner && squares.every((square) => square !== null); // Check for draw
 
   const handleClick = (i) => {
@@ -27,7 +27,14 @@ export default function Board() {
       <h1 className="text-2xl font-bold mb-4">Tic-Tac-Toe</h1>
       <div className="grid grid-cols-3 gap-2">
         {squares.map((square, i) => (
-          <Square key={i} value={square} onClick={() => handleClick(i)} />
+          <Square
+            key={i}
+            value={square}
+            onClick={() => handleClick(i)}
+            highlight={winningLine && winningLine.includes(i)} // Highlight if part of winning line
+            winner={winner} // Pass winner to change colors
+            isDraw={isDraw} // Pass isDraw to change color if the game is a draw
+          />
         ))}
       </div>
       <div className="mt-4">
@@ -65,8 +72,8 @@ function calculateWinner(squares) {
   for (let line of lines) {
     const [a, b, c] = line;
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return { winner: squares[a], winningLine: line }; // Return the winner and the winning line
     }
   }
-  return null;
+  return { winner: null, winningLine: null };
 }
